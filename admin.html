@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>פאנל ניהול - אלקטריקום מערכות</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #2563eb; --blue-dark: #1e40af;
+      --green: #22a657; --red: #dc2626;
+      --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+      --gray-400: #94a3b8; --gray-600: #64748b; --gray-700: #334155;
+      --gray-900: #0f172a;
+    }
+    body {
+      font-family: 'Assistant', system-ui, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .login-wrap {
+      max-width: 420px; margin: 8vh auto; padding: 40px 32px;
+      background: white; border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(15,23,42,0.08);
+    }
+    .login-wrap h1 { font-size: 24px; margin-bottom: 8px; }
+    .login-wrap p.muted { color: var(--gray-600); margin-bottom: 24px; font-size: 14px; }
+    .field { margin-bottom: 16px; }
+    .field > label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--gray-700); font-size: 14px; }
+    .field input, .field textarea {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+      border-radius: 8px; font: inherit; font-size: 15px;
+      background: white; transition: border-color .15s;
+    }
+    .field textarea { min-height: 90px; resize: vertical; font-family: inherit; line-height: 1.5; }
+    .field input:focus, .field textarea:focus { outline: none; border-color: var(--blue); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
+      border: none; border-radius: 8px; font: inherit; font-size: 15px;
+      font-weight: 600; cursor: pointer; transition: .15s;
+    }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: var(--blue-dark); }
+    .btn-secondary { background: var(--gray-100); color: var(--gray-900); }
+    .btn-secondary:hover { background: var(--gray-200); }
+    .btn-danger { background: var(--red); color: white; }
+    .btn-danger:hover { opacity: .9; }
+    .btn-ghost { background: transparent; color: var(--gray-600); padding: 6px 10px; }
+    .btn-ghost:hover { background: var(--gray-100); }
+    .btn[disabled] { opacity: .55; cursor: not-allowed; }
+    .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+    .alert-error { background: #fee2e2; color: #991b1b; }
+    .alert-ok { background: #dcfce7; color: #166534; }
+
+    /* Editor layout */
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+    }
+    .topbar h1 { font-size: 18px; }
+    .topbar .grow { flex: 1; }
+    .topbar .save-status { font-size: 13px; color: var(--gray-600); }
+
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; max-width: 1100px; margin: 24px auto; padding: 0 24px; }
+    @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+
+    .sidenav { position: sticky; top: 76px; align-self: start; background: white; border-radius: 12px; padding: 12px; box-shadow: 0 1px 3px rgba(15,23,42,0.04); max-height: calc(100vh - 100px); overflow-y: auto; }
+    .sidenav a { display: block; padding: 10px 12px; border-radius: 6px; color: var(--gray-700); font-weight: 500; cursor: pointer; font-size: 14px; }
+    .sidenav a:hover { background: var(--gray-100); }
+    .sidenav a.active { background: var(--blue); color: white; }
+
+    .sections { display: flex; flex-direction: column; gap: 18px; }
+    .section-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(15,23,42,0.04); }
+    .section-card h2 { font-size: 19px; margin-bottom: 4px; }
+    .section-card .section-desc { color: var(--gray-600); font-size: 14px; margin-bottom: 18px; }
+
+    /* List items (services, projects, testimonials, ...) */
+    .item-card { border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 16px; margin-bottom: 12px; background: var(--gray-50); }
+    .item-card .item-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .item-card .item-head .item-title { flex: 1; font-weight: 700; color: var(--gray-700); font-size: 14px; }
+    .item-card .item-head .item-actions { display: flex; gap: 4px; }
+    .icon-btn { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; background: white; color: var(--gray-600); border: 1px solid var(--gray-200); cursor: pointer; font-size: 16px; }
+    .icon-btn:hover { background: var(--gray-100); }
+    .icon-btn.danger:hover { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .add-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--gray-100); color: var(--gray-700); border-radius: 8px; cursor: pointer; font-weight: 600; border: 1.5px dashed var(--gray-400); font-size: 14px; }
+    .add-btn:hover { background: white; border-color: var(--blue); color: var(--blue); }
+
+    .image-uploader { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .image-uploader .preview {
+      width: 80px; height: 60px; background: var(--gray-100); border-radius: 6px;
+      background-size: cover; background-position: center; flex-shrink: 0;
+      border: 1px solid var(--gray-200);
+    }
+    .image-uploader input[type="file"] { font-size: 13px; }
+
+    .star-input { display: inline-flex; gap: 4px; cursor: pointer; }
+    .star-input span { font-size: 22px; color: var(--gray-200); }
+    .star-input span.on { color: #facc15; }
+
+    .save-bar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 30px rgba(15,23,42,0.15); display: none; gap: 12px; align-items: center; z-index: 20; }
+    .save-bar.show { display: flex; }
+    .save-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginView">
+  <div class="login-wrap">
+    <h1>פאנל ניהול</h1>
+    <p class="muted">התחבר כדי לערוך את התוכן באתר.</p>
+    <div id="loginAlert" class="alert alert-error" style="display:none;"></div>
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">אימייל</label>
+        <input type="email" id="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">סיסמה</label>
+        <input type="password" id="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%;justify-content:center;">התחבר</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ EDITOR ============ -->
+<div id="editorView" style="display:none;">
+  <div class="topbar">
+    <h1>פאנל ניהול</h1>
+    <span class="save-status" id="saveStatus"></span>
+    <div class="grow"></div>
+    <a href="index.html" target="_blank" class="btn btn-secondary">תצוגה מקדימה</a>
+    <button class="btn btn-primary" id="saveBtn">שמור שינויים</button>
+    <button class="btn btn-ghost" id="logoutBtn">התנתק</button>
+  </div>
+
+  <div class="layout">
+    <nav class="sidenav" id="sidenav"></nav>
+    <div class="sections" id="sections"></div>
+  </div>
+
+  <div class="save-bar" id="saveBar">
+    <span class="dot"></span>
+    <span>יש שינויים שלא נשמרו</span>
+    <button class="btn btn-primary" onclick="document.getElementById('saveBtn').click()">שמור עכשיו</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="cms.js"></script>
+<script>
+(function () {
+  const supa = window.CMS && window.CMS.supabase;
+  const loginView = document.getElementById('loginView');
+  const editorView = document.getElementById('editorView');
+  const loginAlert = document.getElementById('loginAlert');
+  const saveStatus = document.getElementById('saveStatus');
+  const saveBar = document.getElementById('saveBar');
+
+  if (!supa) {
+    loginAlert.textContent = 'Supabase לא מוגדר. ערוך את הקובץ config.js והכנס את URL ו-ANON KEY של הפרויקט שלך, ואז רענן.';
+    loginAlert.style.display = 'block';
+    document.getElementById('loginBtn').disabled = true;
+  }
+
+  // ----- Form schema – describes every editable field -----
+  const SCHEMA = [
+    {
+      id: 'contact',
+      title: 'יצירת קשר (משפיע על כל הדף)',
+      desc: 'פרטי הקשר המשמשים בכל מקום באתר: לחצני התקשרות, וואטסאפ ואימייל.',
+      path: 'contact',
+      fields: [
+        { key: 'phone_display', label: 'טלפון להצגה (כפי שיופיע למבקרים)', type: 'text' },
+        { key: 'phone_tel',     label: 'טלפון לחיוג (ספרות בלבד, ללא רווחים ומקפים)', type: 'text' },
+        { key: 'phone_intl',    label: 'טלפון לוואטסאפ (פורמט בינלאומי, למשל 972509481242)', type: 'text' },
+        { key: 'email',         label: 'אימייל', type: 'text' },
+      ],
+    },
+    {
+      id: 'hero',
+      title: 'Hero - חלק עליון של הדף',
+      desc: 'הכותרת הראשית, התיאור הראשי וכפתורי הקריאה לפעולה.',
+      path: 'hero',
+      fields: [
+        { key: 'badge',           label: 'תג עליון (מעל הכותרת)', type: 'text' },
+        { key: 'title_pre',       label: 'כותרת ראשית - חלק רגיל', type: 'text' },
+        { key: 'title_highlight', label: 'כותרת ראשית - חלק עם גרדיאנט צבעוני', type: 'text' },
+        { key: 'subtitle',        label: 'תיאור מתחת לכותרת', type: 'textarea' },
+        { key: 'btn_primary',     label: 'טקסט כפתור ראשי', type: 'text' },
+        { key: 'btn_secondary',   label: 'טקסט כפתור משני', type: 'text' },
+        { key: 'stat1_number',    label: 'סטטיסטיקה 1 - מספר', type: 'text' },
+        { key: 'stat1_label',     label: 'סטטיסטיקה 1 - תיאור', type: 'text' },
+        { key: 'stat2_number',    label: 'סטטיסטיקה 2 - מספר', type: 'text' },
+        { key: 'stat2_label',     label: 'סטטיסטיקה 2 - תיאור', type: 'text' },
+        { key: 'stat3_number',    label: 'סטטיסטיקה 3 - מספר', type: 'text' },
+        { key: 'stat3_label',     label: 'סטטיסטיקה 3 - תיאור', type: 'text' },
+      ],
+    },
+    {
+      id: 'about',
+      title: 'אודות',
+      desc: 'סקציית האודות והבולטים.',
+      path: 'about',
+      fields: [
+        { key: 'badge_title', label: 'כותרת התג הצדדי', type: 'text' },
+        { key: 'badge_desc',  label: 'תיאור התג הצדדי', type: 'textarea' },
+        { key: 'tag',         label: 'תג עליון', type: 'text' },
+        { key: 'title',       label: 'כותרת הסקציה', type: 'text' },
+        { key: 'paragraph1',  label: 'פסקה ראשונה', type: 'textarea' },
+        { key: 'paragraph2',  label: 'פסקה שנייה', type: 'textarea' },
+        { key: 'checklist',   label: 'בולטים (שורה לכל בולט)', type: 'lines' },
+      ],
+    },
+    {
+      id: 'services',
+      title: 'שירותים',
+      desc: 'שלושת קלפי השירות. ניתן לערוך כל אחד בנפרד.',
+      path: 'services',
+      fields: [
+        { key: 'tag',       label: 'תג עליון', type: 'text' },
+        { key: 'title',     label: 'כותרת הסקציה', type: 'text' },
+        { key: 'subtitle',  label: 'תיאור', type: 'textarea' },
+      ],
+      list: {
+        key: 'items',
+        label: 'קלפי שירות',
+        titleField: 'title',
+        fixedLength: 3,
+        itemFields: [
+          { key: 'title',    label: 'שם השירות', type: 'text' },
+          { key: 'desc',     label: 'תיאור', type: 'textarea' },
+          { key: 'features', label: 'תכונות (שורה לכל בולט)', type: 'lines' },
+        ],
+      },
+    },
+    {
+      id: 'why',
+      title: 'למה אנחנו',
+      desc: 'המאפיינים שמייחדים את העסק.',
+      path: 'why',
+      fields: [
+        { key: 'tag',      label: 'תג עליון', type: 'text' },
+        { key: 'title',    label: 'כותרת הסקציה', type: 'text' },
+        { key: 'subtitle', label: 'תיאור', type: 'textarea' },
+      ],
+      list: {
+        key: 'items', label: 'מאפיינים', titleField: 'title', fixedLength: 4,
+        itemFields: [
+          { key: 'title', label: 'כותרת המאפיין', type: 'text' },
+          { key: 'desc',  label: 'תיאור',           type: 'textarea' },
+        ],
+      },
+    },
+    {
+      id: 'projects',
+      title: 'פרויקטים',
+      desc: 'גלריית פרויקטים שביצעת. ניתן להעלות תמונה לכל פרויקט.',
+      path: 'projects',
+      fields: [
+        { key: 'tag',      label: 'תג עליון', type: 'text' },
+        { key: 'title',    label: 'כותרת הסקציה', type: 'text' },
+        { key: 'subtitle', label: 'תיאור', type: 'textarea' },
+      ],
+      list: {
+        key: 'items', label: 'פרויקטים', titleField: 'title', fixedLength: 6,
+        itemFields: [
+          { key: 'title',    label: 'שם הפרויקט', type: 'text' },
+          { key: 'subtitle', label: 'תיאור קצר',  type: 'text' },
+          { key: 'image',    label: 'תמונה (אופציונלי)', type: 'image' },
+        ],
+      },
+    },
+    {
+      id: 'testimonials',
+      title: 'המלצות',
+      desc: 'המלצות מלקוחות.',
+      path: 'testimonials',
+      fields: [
+        { key: 'tag',      label: 'תג עליון', type: 'text' },
+        { key: 'title',    label: 'כותרת הסקציה', type: 'text' },
+        { key: 'subtitle', label: 'תיאור', type: 'textarea' },
+      ],
+      list: {
+        key: 'items', label: 'המלצות', titleField: 'name',
+        itemFields: [
+          { key: 'name',   label: 'שם הלקוח',                type: 'text' },
+          { key: 'role',   label: 'תפקיד / מיקום',           type: 'text' },
+          { key: 'text',   label: 'תוכן ההמלצה',             type: 'textarea' },
+          { key: 'avatar', label: 'ראשי תיבות לאווטאר (2-3 תווים)', type: 'text' },
+          { key: 'rating', label: 'דירוג כוכבים (1-5)',      type: 'stars' },
+        ],
+        newItem: () => ({ name: 'לקוח חדש', role: '', text: '', avatar: 'א.א', rating: 5 }),
+      },
+    },
+    {
+      id: 'contact_section',
+      title: 'סקציית "צור קשר"',
+      desc: 'הכותרות והטקסטים בסקציית יצירת הקשר.',
+      path: 'contact_section',
+      fields: [
+        { key: 'tag',                label: 'תג עליון', type: 'text' },
+        { key: 'title',              label: 'כותרת', type: 'text' },
+        { key: 'subtitle',           label: 'תיאור', type: 'textarea' },
+        { key: 'whatsapp_title',     label: 'כותרת בלוק וואטסאפ', type: 'text' },
+        { key: 'whatsapp_text',      label: 'טקסט בלוק וואטסאפ', type: 'textarea' },
+        { key: 'whatsapp_btn',       label: 'טקסט כפתור וואטסאפ', type: 'text' },
+        { key: 'whatsapp_footnote',  label: 'הערה תחתונה', type: 'text' },
+      ],
+    },
+    {
+      id: 'footer',
+      title: 'Footer',
+      desc: 'תחתית הדף.',
+      path: 'footer',
+      fields: [
+        { key: 'description', label: 'תיאור החברה', type: 'textarea' },
+      ],
+    },
+  ];
+
+  // ----- State -----
+  let content = null;
+  let dirty = false;
+
+  // ----- Rendering -----
+  const sectionsEl = document.getElementById('sections');
+  const sidenavEl = document.getElementById('sidenav');
+
+  function markDirty() { dirty = true; saveBar.classList.add('show'); }
+
+  function render() {
+    sectionsEl.innerHTML = '';
+    sidenavEl.innerHTML = '';
+
+    SCHEMA.forEach(sec => {
+      const link = document.createElement('a');
+      link.textContent = sec.title;
+      link.dataset.section = sec.id;
+      link.onclick = () => { document.getElementById('sec-' + sec.id).scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+      sidenavEl.appendChild(link);
+
+      const card = document.createElement('div');
+      card.className = 'section-card';
+      card.id = 'sec-' + sec.id;
+
+      const h2 = document.createElement('h2'); h2.textContent = sec.title; card.appendChild(h2);
+      if (sec.desc) { const d = document.createElement('div'); d.className = 'section-desc'; d.textContent = sec.desc; card.appendChild(d); }
+
+      // simple fields
+      sec.fields.forEach(f => {
+        card.appendChild(renderField(f, getAtPath(content, sec.path + '.' + f.key), (v) => {
+          setAtPath(content, sec.path + '.' + f.key, v);
+          markDirty();
+        }));
+      });
+
+      // list
+      if (sec.list) {
+        const listWrap = document.createElement('div');
+        listWrap.style.marginTop = '24px';
+        const listTitle = document.createElement('h3');
+        listTitle.textContent = sec.list.label;
+        listTitle.style.cssText = 'font-size:16px;margin-bottom:12px;color:#334155;';
+        listWrap.appendChild(listTitle);
+
+        const itemsContainer = document.createElement('div');
+        listWrap.appendChild(itemsContainer);
+
+        let items = getAtPath(content, sec.path + '.' + sec.list.key) || [];
+        // For fixed-length lists make sure we always render exactly N slots
+        if (sec.list.fixedLength && items.length < sec.list.fixedLength) {
+          items = items.slice();
+          while (items.length < sec.list.fixedLength) items.push({});
+          setAtPath(content, sec.path + '.' + sec.list.key, items);
+        }
+        items.forEach((item, idx) => itemsContainer.appendChild(renderListItem(sec, item, idx)));
+
+        if (!sec.list.fixedLength && typeof sec.list.newItem === 'function') {
+          const addBtn = document.createElement('button');
+          addBtn.type = 'button'; addBtn.className = 'add-btn';
+          addBtn.innerHTML = '+ הוסף ' + sec.list.label.replace(/ים$/, '').replace(/ות$/, 'ה');
+          addBtn.onclick = () => {
+            const arr = getAtPath(content, sec.path + '.' + sec.list.key) || [];
+            arr.push(sec.list.newItem());
+            setAtPath(content, sec.path + '.' + sec.list.key, arr);
+            markDirty();
+            render();
+          };
+          listWrap.appendChild(addBtn);
+        }
+        card.appendChild(listWrap);
+      }
+
+      sectionsEl.appendChild(card);
+    });
+
+    setupScrollSpy();
+  }
+
+  function renderListItem(sec, item, idx) {
+    const itemEl = document.createElement('div');
+    itemEl.className = 'item-card';
+
+    const head = document.createElement('div');
+    head.className = 'item-head';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'item-title';
+    titleEl.textContent = `#${idx + 1} – ${item[sec.list.titleField] || '(ללא כותרת)'}`;
+    head.appendChild(titleEl);
+
+    const actions = document.createElement('div'); actions.className = 'item-actions';
+    if (!sec.list.fixedLength) {
+      if (idx > 0) actions.appendChild(makeIconBtn('▲', 'הזז למעלה', () => {
+        moveItem(sec, idx, idx - 1); render();
+      }));
+      const arr = getAtPath(content, sec.path + '.' + sec.list.key) || [];
+      if (idx < arr.length - 1) actions.appendChild(makeIconBtn('▼', 'הזז למטה', () => {
+        moveItem(sec, idx, idx + 1); render();
+      }));
+      actions.appendChild(makeIconBtn('🗑', 'מחק', () => {
+        if (!confirm('למחוק את הפריט הזה?')) return;
+        const arrNow = getAtPath(content, sec.path + '.' + sec.list.key) || [];
+        arrNow.splice(idx, 1);
+        setAtPath(content, sec.path + '.' + sec.list.key, arrNow);
+        markDirty();
+        render();
+      }, 'danger'));
+    }
+    head.appendChild(actions);
+    itemEl.appendChild(head);
+
+    sec.list.itemFields.forEach(f => {
+      itemEl.appendChild(renderField(f, item[f.key], (v) => {
+        item[f.key] = v;
+        markDirty();
+        titleEl.textContent = `#${idx + 1} – ${item[sec.list.titleField] || '(ללא כותרת)'}`;
+      }));
+    });
+
+    return itemEl;
+  }
+
+  function moveItem(sec, from, to) {
+    const arr = getAtPath(content, sec.path + '.' + sec.list.key) || [];
+    const [moved] = arr.splice(from, 1);
+    arr.splice(to, 0, moved);
+    setAtPath(content, sec.path + '.' + sec.list.key, arr);
+    markDirty();
+  }
+
+  function makeIconBtn(label, title, onClick, extraCls) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'icon-btn' + (extraCls ? ' ' + extraCls : '');
+    b.textContent = label; b.title = title; b.onclick = onClick;
+    return b;
+  }
+
+  function renderField(f, value, onChange) {
+    const wrap = document.createElement('div'); wrap.className = 'field';
+    const lab = document.createElement('label'); lab.textContent = f.label; wrap.appendChild(lab);
+
+    if (f.type === 'text') {
+      const input = document.createElement('input'); input.type = 'text';
+      input.value = value || '';
+      input.addEventListener('input', () => onChange(input.value));
+      wrap.appendChild(input);
+    } else if (f.type === 'textarea') {
+      const ta = document.createElement('textarea');
+      ta.value = value || '';
+      ta.addEventListener('input', () => onChange(ta.value));
+      wrap.appendChild(ta);
+    } else if (f.type === 'lines') {
+      const ta = document.createElement('textarea');
+      ta.value = (Array.isArray(value) ? value : []).join('\n');
+      ta.addEventListener('input', () => onChange(ta.value.split('\n').map(s => s.trim()).filter(Boolean)));
+      wrap.appendChild(ta);
+    } else if (f.type === 'stars') {
+      const stars = document.createElement('div'); stars.className = 'star-input';
+      let cur = Number(value || 5);
+      for (let i = 1; i <= 5; i++) {
+        const s = document.createElement('span'); s.textContent = '★';
+        if (i <= cur) s.classList.add('on');
+        s.onclick = () => { cur = i; onChange(cur); Array.from(stars.children).forEach((c, idx) => c.classList.toggle('on', idx < cur)); };
+        stars.appendChild(s);
+      }
+      wrap.appendChild(stars);
+    } else if (f.type === 'image') {
+      const uploader = document.createElement('div'); uploader.className = 'image-uploader';
+      const preview = document.createElement('div'); preview.className = 'preview';
+      if (value) preview.style.backgroundImage = `url("${value}")`;
+      uploader.appendChild(preview);
+
+      const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = 'image/*';
+      fileInput.onchange = async () => {
+        const file = fileInput.files && fileInput.files[0]; if (!file) return;
+        try {
+          fileInput.disabled = true;
+          const url = await window.CMS.uploadImage(file);
+          preview.style.backgroundImage = `url("${url}")`;
+          onChange(url);
+        } catch (e) {
+          alert('שגיאה בהעלאה: ' + (e.message || e));
+        } finally {
+          fileInput.disabled = false;
+        }
+      };
+      uploader.appendChild(fileInput);
+      if (value) {
+        const clearBtn = document.createElement('button');
+        clearBtn.type = 'button'; clearBtn.className = 'btn btn-ghost'; clearBtn.textContent = 'הסר';
+        clearBtn.onclick = () => { onChange(''); preview.style.backgroundImage = ''; clearBtn.remove(); };
+        uploader.appendChild(clearBtn);
+      }
+      wrap.appendChild(uploader);
+    }
+    return wrap;
+  }
+
+  // ----- Path helpers -----
+  function getAtPath(obj, path) {
+    return path.split('.').reduce((a, k) => (a == null ? a : a[k]), obj);
+  }
+  function setAtPath(obj, path, val) {
+    const parts = path.split('.');
+    const last = parts.pop();
+    let cur = obj;
+    parts.forEach(k => { if (!(k in cur) || typeof cur[k] !== 'object' || cur[k] === null) cur[k] = {}; cur = cur[k]; });
+    cur[last] = val;
+  }
+
+  // ----- Scroll spy -----
+  function setupScrollSpy() {
+    const links = sidenavEl.querySelectorAll('a');
+    const cards = SCHEMA.map(s => document.getElementById('sec-' + s.id));
+    function onScroll() {
+      let activeIdx = 0;
+      const top = window.scrollY + 120;
+      cards.forEach((c, i) => { if (c && c.offsetTop <= top) activeIdx = i; });
+      links.forEach((l, i) => l.classList.toggle('active', i === activeIdx));
+    }
+    window.removeEventListener('scroll', window.__cmsScroll);
+    window.__cmsScroll = onScroll;
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+  }
+
+  // ----- Auth & data flow -----
+  async function startEditor() {
+    loginView.style.display = 'none';
+    editorView.style.display = '';
+    content = window.CMS.withDefaults({});
+    saveStatus.textContent = 'טוען תוכן…';
+    try {
+      const stored = await window.CMS.fetchContent();
+      content = window.CMS.withDefaults(stored);
+      saveStatus.textContent = '';
+    } catch (e) {
+      saveStatus.textContent = 'שגיאה בטעינת התוכן: ' + (e.message || e);
+    }
+    render();
+  }
+
+  async function init() {
+    if (!supa) return;
+    const { data: { session } } = await supa.auth.getSession();
+    if (session) startEditor();
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginAlert.style.display = 'none';
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = 'מתחבר…';
+    const { error } = await supa.auth.signInWithPassword({ email, password });
+    btn.disabled = false; btn.textContent = 'התחבר';
+    if (error) {
+      loginAlert.textContent = 'התחברות נכשלה: ' + error.message;
+      loginAlert.style.display = 'block';
+      return;
+    }
+    startEditor();
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    if (dirty && !confirm('יש שינויים שלא נשמרו. לצאת בלי לשמור?')) return;
+    await supa.auth.signOut();
+    location.reload();
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true; btn.textContent = 'שומר…';
+    saveStatus.textContent = '';
+    try {
+      await window.CMS.saveContent(content);
+      dirty = false;
+      saveBar.classList.remove('show');
+      saveStatus.textContent = 'נשמר ✓';
+      setTimeout(() => { if (saveStatus.textContent === 'נשמר ✓') saveStatus.textContent = ''; }, 2500);
+    } catch (e) {
+      saveStatus.textContent = '';
+      alert('שמירה נכשלה: ' + (e.message || e));
+    } finally {
+      btn.disabled = false; btn.textContent = 'שמור שינויים';
+    }
+  });
+
+  window.addEventListener('beforeunload', (e) => {
+    if (dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  // Disable cms.js auto-apply on this page
+  document.body.setAttribute('data-cms-no-auto', '');
+  init();
+})();
+</script>
+</body>
+</html>

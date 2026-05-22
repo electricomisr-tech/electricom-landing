@@ -124,7 +124,7 @@
         { name: 'ABB',                logo: 'logos/abb.png' },
         { name: 'Siemens',            logo: 'logos/siemens.png' },
         { name: 'Hager',              logo: 'logos/hager.png' },
-        { name: 'Gewiss',             logo: 'https://www.google.com/s2/favicons?domain=gewiss.com&sz=128' },
+        { name: 'Gewiss',             logo: 'logos/gewiss.png' },
         { name: 'Eaton',              logo: 'logos/eaton.png' },
         { name: 'NISKO',              logo: 'https://www.google.com/s2/favicons?domain=nisko.co.il&sz=128' },
         { name: 'Philips',            logo: 'logos/philips.png' },
@@ -148,7 +148,7 @@
         { name: 'Bosch Security',     logo: 'logos/bosch.svg' },
         { name: 'Uniview',            logo: 'logos/uniview.png' },
         // אזעקות
-        { name: 'Risco',              logo: 'https://www.google.com/s2/favicons?domain=riscogroup.com&sz=128' },
+        { name: 'Risco',              logo: 'logos/risco.jpg' },
         { name: 'Visonic',            logo: 'logos/visonic.jpg' },
       ],
     },

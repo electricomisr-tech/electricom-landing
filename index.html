@@ -1860,10 +1860,12 @@
                 .marquee { position: relative; overflow: hidden; mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%); }
                 .marquee-track { display: flex; align-items: center; width: max-content; will-change: transform; direction: ltr; }
                 .marquee-track > template { display: none !important; }
-                .partner-logo { flex: 0 0 200px; height: 70px; display: flex; align-items: center; justify-content: center; gap: 12px; opacity: .85; transition: opacity .25s, transform .25s; direction: rtl; }
+                .partner-logo { flex: 0 0 220px; height: 80px; display: flex; align-items: center; justify-content: center; padding: 0 16px; opacity: .9; transition: opacity .25s, transform .25s; }
                 .partner-logo:hover { opacity: 1; transform: scale(1.05); }
-                .partner-logo img { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
-                .partner-logo .partner-text { font-weight: 700; color: var(--color-gray-700); font-size: 15px; white-space: nowrap; }
+                .partner-logo img { max-width: 180px; max-height: 50px; width: auto; height: auto; object-fit: contain; }
+                .partner-logo .partner-text { font-weight: 700; color: var(--color-gray-700); font-size: 17px; white-space: nowrap; margin-right: 10px; }
+                /* Hide text when a proper logo image is present (only show text for favicons/small icons) */
+                .partner-logo:has(img[src^="logos/"]) .partner-text { display: none; }
                 @media (prefers-reduced-motion: reduce) { .marquee-track { transform: none !important; } }
             </style>
             <h2 id="partners-title" class="partners-title" data-cms="partners.title">המותגים המובילים שאנחנו עובדים איתם</h2>

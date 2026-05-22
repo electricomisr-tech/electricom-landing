@@ -1861,10 +1861,10 @@
                 .marquee-track { display: flex; align-items: center; width: max-content; animation: marquee 60s linear infinite; }
                 .marquee:hover .marquee-track { animation-play-state: paused; }
                 .marquee-track > template { display: none !important; }
-                .partner-logo { flex: 0 0 180px; height: 60px; display: flex; align-items: center; justify-content: center; opacity: .6; filter: grayscale(1); transition: opacity .25s, filter .25s; }
-                .partner-logo:hover { opacity: 1; filter: grayscale(0); }
-                .partner-logo img { max-height: 44px; max-width: 130px; width: auto; height: auto; object-fit: contain; }
-                .partner-logo .partner-text { font-weight: 700; color: var(--color-gray-700); font-size: 17px; white-space: nowrap; }
+                .partner-logo { flex: 0 0 200px; height: 70px; display: flex; align-items: center; justify-content: center; gap: 12px; opacity: .85; transition: opacity .25s, transform .25s; }
+                .partner-logo:hover { opacity: 1; transform: scale(1.05); }
+                .partner-logo img { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+                .partner-logo .partner-text { font-weight: 700; color: var(--color-gray-700); font-size: 15px; white-space: nowrap; }
                 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
                 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
             </style>
@@ -1874,7 +1874,7 @@
                     <template data-cms-tpl>
                         <div class="partner-logo">
                             <img data-cms-field-src="logo" data-cms-field-alt="name">
-                            <span class="partner-text" data-cms-field="name" data-cms-fallback-only></span>
+                            <span class="partner-text" data-cms-field="name"></span>
                         </div>
                     </template>
                 </div>

@@ -116,6 +116,32 @@
     footer: {
       description: 'מומחים בתשתיות חשמל, תקשורת ואבטחה. שלושים שנות ניסיון, מאות לקוחות מרוצים, שירות מקצועי בכל הארץ.',
     },
+    partners: {
+      title: 'המותגים המובילים שאנחנו עובדים איתם',
+      items: [
+        { name: 'Hikvision',          logo: 'https://www.google.com/s2/favicons?domain=hikvision.com&sz=128' },
+        { name: 'Dahua',              logo: 'https://www.google.com/s2/favicons?domain=dahuasecurity.com&sz=128' },
+        { name: 'Provision-ISR',      logo: 'https://www.google.com/s2/favicons?domain=provision-isr.com&sz=128' },
+        { name: 'Axis Communications',logo: 'https://www.google.com/s2/favicons?domain=axis.com&sz=128' },
+        { name: 'Bosch Security',     logo: 'https://www.google.com/s2/favicons?domain=boschsecurity.com&sz=128' },
+        { name: 'Cisco',              logo: 'https://www.google.com/s2/favicons?domain=cisco.com&sz=128' },
+        { name: 'Aruba (HPE)',        logo: 'https://www.google.com/s2/favicons?domain=arubanetworks.com&sz=128' },
+        { name: 'Ubiquiti',           logo: 'https://www.google.com/s2/favicons?domain=ui.com&sz=128' },
+        { name: 'MikroTik',           logo: 'https://www.google.com/s2/favicons?domain=mikrotik.com&sz=128' },
+        { name: 'Fortinet',           logo: 'https://www.google.com/s2/favicons?domain=fortinet.com&sz=128' },
+        { name: 'TP-Link',            logo: 'https://www.google.com/s2/favicons?domain=tp-link.com&sz=128' },
+        { name: 'D-Link',             logo: 'https://www.google.com/s2/favicons?domain=dlink.com&sz=128' },
+        { name: 'Ruijie',             logo: 'https://www.google.com/s2/favicons?domain=ruijienetworks.com&sz=128' },
+        { name: 'Synology',           logo: 'https://www.google.com/s2/favicons?domain=synology.com&sz=128' },
+        { name: 'CommScope',          logo: 'https://www.google.com/s2/favicons?domain=commscope.com&sz=128' },
+        { name: 'Panduit',            logo: '' },
+        { name: 'Schneider Electric', logo: 'https://www.google.com/s2/favicons?domain=se.com&sz=128' },
+        { name: 'ABB',                logo: 'https://www.google.com/s2/favicons?domain=abb.com&sz=128' },
+        { name: 'Legrand',            logo: 'https://www.google.com/s2/favicons?domain=legrand.com&sz=128' },
+        { name: 'Eaton',              logo: 'https://www.google.com/s2/favicons?domain=eaton.com&sz=128' },
+        { name: 'Philips',            logo: 'https://www.google.com/s2/favicons?domain=philips.com&sz=128' },
+      ],
+    },
   };
 
   // ---------- Helpers ----------
@@ -207,20 +233,46 @@
       if (!Array.isArray(items) || !tpl) return;
       // Clear all previously-rendered children (everything except the <template> itself)
       Array.from(container.children).forEach(c => { if (c !== tpl) c.remove(); });
+      // Double the items if the container needs a seamless loop (used by marquee)
+      const renderTimes = container.getAttribute('data-cms-list-double') === 'true' ? 2 : 1;
+      for (let r = 0; r < renderTimes; r++) {
       items.forEach((item, idx) => {
         const node = tpl.content.cloneNode(true);
         // Fill {{field}} placeholders inside the cloned subtree
         node.querySelectorAll('[data-cms-field]').forEach(el => {
           const field = el.getAttribute('data-cms-field');
           const v = field === '.' ? item : (item ? item[field] : undefined);
+          // "fallback-only" elements should only show when the related image is empty / failed
+          const fallbackOnly = el.hasAttribute('data-cms-fallback-only');
+          if (fallbackOnly) {
+            const sibling = el.parentElement && el.parentElement.querySelector('[data-cms-field-src]');
+            const hasImage = sibling && sibling.getAttribute('src');
+            el.style.display = hasImage ? 'none' : '';
+          }
           if (v !== undefined && v !== null) setText(el, v);
         });
         // Image inside list item
         node.querySelectorAll('[data-cms-field-src]').forEach(el => {
           const field = el.getAttribute('data-cms-field-src');
           const v = item ? item[field] : undefined;
-          if (v) { el.setAttribute('src', v); el.style.display = ''; }
-          else { el.style.display = 'none'; }
+          if (v) {
+            el.setAttribute('src', v);
+            el.style.display = '';
+            // If the image fails to load, hide it and show any fallback-only sibling
+            el.addEventListener('error', () => {
+              el.style.display = 'none';
+              const fb = el.parentElement && el.parentElement.querySelector('[data-cms-fallback-only]');
+              if (fb) fb.style.display = '';
+            }, { once: true });
+          } else {
+            el.style.display = 'none';
+          }
+        });
+        // alt attribute from a field
+        node.querySelectorAll('[data-cms-field-alt]').forEach(el => {
+          const field = el.getAttribute('data-cms-field-alt');
+          const v = item ? item[field] : undefined;
+          if (v) el.setAttribute('alt', v);
         });
         // Repeating sub-list (e.g. service features)
         node.querySelectorAll('[data-cms-field-list]').forEach(el => {
@@ -249,6 +301,7 @@
         container.appendChild(node);
         void idx;
       });
+      }
     });
   }
 

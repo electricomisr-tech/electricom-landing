@@ -207,6 +207,23 @@
       ],
     },
     {
+      id: 'partners',
+      title: 'מותגים (Marquee)',
+      desc: 'רצועת לוגואים שזזה אופקית מתחת ל-Hero. ניתן להוסיף/למחוק/לשנות סדר ולהעלות לוגו אישי.',
+      path: 'partners',
+      fields: [
+        { key: 'title', label: 'כותרת מעל הרצועה', type: 'text' },
+      ],
+      list: {
+        key: 'items', label: 'מותגים', titleField: 'name',
+        itemFields: [
+          { key: 'name', label: 'שם החברה', type: 'text' },
+          { key: 'logo', label: 'לוגו (העלה תמונה, או השאר ברירת מחדל)', type: 'image' },
+        ],
+        newItem: () => ({ name: 'מותג חדש', logo: '' }),
+      },
+    },
+    {
       id: 'about',
       title: 'אודות',
       desc: 'סקציית האודות והבולטים.',

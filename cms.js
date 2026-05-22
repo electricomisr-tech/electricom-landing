@@ -119,27 +119,27 @@
     partners: {
       title: 'המותגים המובילים שאנחנו עובדים איתם',
       items: [
-        { name: 'Hikvision',          logo: 'https://www.google.com/s2/favicons?domain=hikvision.com&sz=128' },
-        { name: 'Dahua',              logo: 'https://www.google.com/s2/favicons?domain=dahuasecurity.com&sz=128' },
-        { name: 'Provision-ISR',      logo: 'https://www.google.com/s2/favicons?domain=provision-isr.com&sz=128' },
-        { name: 'Axis Communications',logo: 'https://www.google.com/s2/favicons?domain=axis.com&sz=128' },
-        { name: 'Bosch Security',     logo: 'https://www.google.com/s2/favicons?domain=boschsecurity.com&sz=128' },
-        { name: 'Cisco',              logo: 'https://www.google.com/s2/favicons?domain=cisco.com&sz=128' },
-        { name: 'Aruba (HPE)',        logo: 'https://www.google.com/s2/favicons?domain=arubanetworks.com&sz=128' },
-        { name: 'Ubiquiti',           logo: 'https://www.google.com/s2/favicons?domain=ui.com&sz=128' },
-        { name: 'MikroTik',           logo: 'https://www.google.com/s2/favicons?domain=mikrotik.com&sz=128' },
-        { name: 'Fortinet',           logo: 'https://www.google.com/s2/favicons?domain=fortinet.com&sz=128' },
-        { name: 'TP-Link',            logo: 'https://www.google.com/s2/favicons?domain=tp-link.com&sz=128' },
-        { name: 'D-Link',             logo: 'https://www.google.com/s2/favicons?domain=dlink.com&sz=128' },
-        { name: 'Ruijie',             logo: 'https://www.google.com/s2/favicons?domain=ruijienetworks.com&sz=128' },
-        { name: 'Synology',           logo: 'https://www.google.com/s2/favicons?domain=synology.com&sz=128' },
-        { name: 'CommScope',          logo: 'https://www.google.com/s2/favicons?domain=commscope.com&sz=128' },
+        { name: 'Hikvision',          logo: '' },
+        { name: 'Dahua',              logo: '' },
+        { name: 'Provision-ISR',      logo: '' },
+        { name: 'Axis Communications',logo: '' },
+        { name: 'Bosch Security',     logo: '' },
+        { name: 'Cisco',              logo: '' },
+        { name: 'Aruba (HPE)',        logo: '' },
+        { name: 'Ubiquiti',           logo: '' },
+        { name: 'MikroTik',           logo: '' },
+        { name: 'Fortinet',           logo: '' },
+        { name: 'TP-Link',            logo: '' },
+        { name: 'D-Link',             logo: '' },
+        { name: 'Ruijie',             logo: '' },
+        { name: 'Synology',           logo: '' },
+        { name: 'CommScope',          logo: '' },
         { name: 'Panduit',            logo: '' },
-        { name: 'Schneider Electric', logo: 'https://www.google.com/s2/favicons?domain=se.com&sz=128' },
-        { name: 'ABB',                logo: 'https://www.google.com/s2/favicons?domain=abb.com&sz=128' },
-        { name: 'Legrand',            logo: 'https://www.google.com/s2/favicons?domain=legrand.com&sz=128' },
-        { name: 'Eaton',              logo: 'https://www.google.com/s2/favicons?domain=eaton.com&sz=128' },
-        { name: 'Philips',            logo: 'https://www.google.com/s2/favicons?domain=philips.com&sz=128' },
+        { name: 'Schneider Electric', logo: '' },
+        { name: 'ABB',                logo: '' },
+        { name: 'Legrand',            logo: '' },
+        { name: 'Eaton',              logo: '' },
+        { name: 'Philips',            logo: '' },
       ],
     },
   };
@@ -242,12 +242,13 @@
         node.querySelectorAll('[data-cms-field]').forEach(el => {
           const field = el.getAttribute('data-cms-field');
           const v = field === '.' ? item : (item ? item[field] : undefined);
-          // "fallback-only" elements should only show when the related image is empty / failed
+          // "fallback-only" elements show only when the related image field has no value
           const fallbackOnly = el.hasAttribute('data-cms-fallback-only');
           if (fallbackOnly) {
             const sibling = el.parentElement && el.parentElement.querySelector('[data-cms-field-src]');
-            const hasImage = sibling && sibling.getAttribute('src');
-            el.style.display = hasImage ? 'none' : '';
+            const imgField = sibling && sibling.getAttribute('data-cms-field-src');
+            const hasLogoValue = !!(item && imgField && item[imgField]);
+            el.style.display = hasLogoValue ? 'none' : '';
           }
           if (v !== undefined && v !== null) setText(el, v);
         });

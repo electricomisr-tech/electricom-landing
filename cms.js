@@ -145,10 +145,10 @@
         { name: 'Dahua',              logo: 'logos/dahua.png' },
         { name: 'Provision-ISR',      logo: 'https://www.google.com/s2/favicons?domain=provision-isr.com&sz=128' },
         { name: 'Axis Communications',logo: 'logos/axis.png' },
-        { name: 'Bosch Security',     logo: 'logos/bosch.svg' },
+        { name: 'Bosch Security',     logo: 'logos/bosch.png' },
         { name: 'Uniview',            logo: 'logos/uniview.png' },
         // אזעקות
-        { name: 'Risco',              logo: 'logos/risco.jpg' },
+        { name: 'Risco',              logo: 'logos/risco.png' },
         { name: 'Visonic',            logo: 'logos/visonic.jpg' },
       ],
     },

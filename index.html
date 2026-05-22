@@ -1858,18 +1858,16 @@
                 .partners { background: var(--color-gray-50); padding: 36px 0; border-top: 1px solid var(--color-gray-100); border-bottom: 1px solid var(--color-gray-100); overflow: hidden; }
                 .partners-title { text-align: center; color: var(--color-gray-500); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
                 .marquee { position: relative; overflow: hidden; mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%); }
-                .marquee-track { display: flex; align-items: center; width: max-content; animation: marquee 60s linear infinite; }
-                .marquee:hover .marquee-track { animation-play-state: paused; }
+                .marquee-track { display: flex; align-items: center; width: max-content; will-change: transform; direction: ltr; }
                 .marquee-track > template { display: none !important; }
-                .partner-logo { flex: 0 0 200px; height: 70px; display: flex; align-items: center; justify-content: center; gap: 12px; opacity: .85; transition: opacity .25s, transform .25s; }
+                .partner-logo { flex: 0 0 200px; height: 70px; display: flex; align-items: center; justify-content: center; gap: 12px; opacity: .85; transition: opacity .25s, transform .25s; direction: rtl; }
                 .partner-logo:hover { opacity: 1; transform: scale(1.05); }
                 .partner-logo img { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
                 .partner-logo .partner-text { font-weight: 700; color: var(--color-gray-700); font-size: 15px; white-space: nowrap; }
-                @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-                @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+                @media (prefers-reduced-motion: reduce) { .marquee-track { transform: none !important; } }
             </style>
             <h2 id="partners-title" class="partners-title" data-cms="partners.title">המותגים המובילים שאנחנו עובדים איתם</h2>
-            <div class="marquee">
+            <div class="marquee" id="partnersMarquee">
                 <div class="marquee-track" data-cms-list="partners.items" data-cms-list-double="true">
                     <template data-cms-tpl>
                         <div class="partner-logo">
@@ -1879,6 +1877,40 @@
                     </template>
                 </div>
             </div>
+            <script>
+                // Smooth infinite marquee — JS-driven so it never jumps even with mixed item widths
+                (function () {
+                    const marquee = document.getElementById('partnersMarquee');
+                    if (!marquee) return;
+                    const track = marquee.querySelector('.marquee-track');
+                    let pos = 0;
+                    let halfWidth = 0;
+                    let lastT = performance.now();
+                    let paused = false;
+                    const speed = 60; // pixels per second
+                    function measure() {
+                        halfWidth = track.scrollWidth / 2;
+                    }
+                    function tick(now) {
+                        const dt = Math.min(50, now - lastT) / 1000;
+                        lastT = now;
+                        if (!paused && halfWidth > 0) {
+                            pos -= speed * dt;
+                            if (pos <= -halfWidth) pos += halfWidth;
+                            track.style.transform = 'translateX(' + pos + 'px)';
+                        }
+                        requestAnimationFrame(tick);
+                    }
+                    marquee.addEventListener('mouseenter', () => { paused = true; });
+                    marquee.addEventListener('mouseleave', () => { paused = false; });
+                    // Re-measure when images load (their dimensions might change layout)
+                    window.addEventListener('load', measure);
+                    new MutationObserver(measure).observe(track, { childList: true });
+                    setTimeout(measure, 100);
+                    setTimeout(measure, 1000);
+                    requestAnimationFrame(tick);
+                })();
+            </script>
         </section>
 
         <!-- About Section -->

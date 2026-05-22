@@ -2625,6 +2625,16 @@
 
         revealElements.forEach(el => revealObserver.observe(el));
 
+        // Observe ANY new .reveal elements that the CMS adds later (testimonials, partners, etc.)
+        const revealMo = new MutationObserver(muts => {
+            muts.forEach(m => m.addedNodes.forEach(node => {
+                if (node.nodeType !== 1) return;
+                if (node.matches && node.matches('.reveal')) revealObserver.observe(node);
+                if (node.querySelectorAll) node.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+            }));
+        });
+        revealMo.observe(document.body, { childList: true, subtree: true });
+
         // ==================== WhatsApp CTA ====================
         const whatsappBtn = document.getElementById('whatsappCtaBtn');
         const whatsappQuickBtns = document.querySelectorAll('.whatsapp-quick-btn');

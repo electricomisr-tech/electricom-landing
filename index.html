@@ -1878,7 +1878,7 @@
                 </div>
             </div>
             <script>
-                // Smooth infinite marquee — JS-driven so it never jumps even with mixed item widths
+                // Smooth infinite marquee — JS-driven for truly seamless looping
                 (function () {
                     const marquee = document.getElementById('partnersMarquee');
                     if (!marquee) return;
@@ -1887,9 +1887,12 @@
                     let halfWidth = 0;
                     let lastT = performance.now();
                     let paused = false;
-                    const speed = 60; // pixels per second
+                    const speed = 55; // pixels per second
                     function measure() {
-                        halfWidth = track.scrollWidth / 2;
+                        // Use offsetWidth of children to compute total content width reliably
+                        let total = 0;
+                        track.querySelectorAll('.partner-logo').forEach(el => { total += el.offsetWidth; });
+                        if (total > 0) halfWidth = total / 2;
                     }
                     function tick(now) {
                         const dt = Math.min(50, now - lastT) / 1000;
@@ -1897,17 +1900,16 @@
                         if (!paused && halfWidth > 0) {
                             pos -= speed * dt;
                             if (pos <= -halfWidth) pos += halfWidth;
-                            track.style.transform = 'translateX(' + pos + 'px)';
+                            track.style.transform = 'translate3d(' + pos + 'px, 0, 0)';
                         }
                         requestAnimationFrame(tick);
                     }
                     marquee.addEventListener('mouseenter', () => { paused = true; });
                     marquee.addEventListener('mouseleave', () => { paused = false; });
-                    // Re-measure when images load (their dimensions might change layout)
+                    // Re-measure after CMS injects items, after images load, after fonts load
                     window.addEventListener('load', measure);
                     new MutationObserver(measure).observe(track, { childList: true });
-                    setTimeout(measure, 100);
-                    setTimeout(measure, 1000);
+                    [50, 200, 500, 1500, 3000].forEach(d => setTimeout(measure, d));
                     requestAnimationFrame(tick);
                 })();
             </script>

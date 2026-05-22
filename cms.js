@@ -119,26 +119,37 @@
     partners: {
       title: 'המותגים המובילים שאנחנו עובדים איתם',
       items: [
-        // חשמל
+        // חשמל ותאורה
         { name: 'Schneider Electric', logo: 'https://www.google.com/s2/favicons?domain=se.com&sz=128' },
         { name: 'ABB',                logo: 'https://www.google.com/s2/favicons?domain=abb.com&sz=128' },
         { name: 'Siemens',            logo: 'https://www.google.com/s2/favicons?domain=siemens.com&sz=128' },
         { name: 'Hager',              logo: 'https://www.google.com/s2/favicons?domain=hager.com&sz=128' },
         { name: 'Gewiss',             logo: 'https://www.google.com/s2/favicons?domain=gewiss.com&sz=128' },
         { name: 'Eaton',              logo: 'https://www.google.com/s2/favicons?domain=eaton.com&sz=128' },
-        { name: 'Legrand',            logo: 'https://www.google.com/s2/favicons?domain=legrand.com&sz=128' },
+        { name: 'NISKO',              logo: 'https://www.google.com/s2/favicons?domain=nisko.co.il&sz=128' },
+        { name: 'Philips',            logo: 'https://www.google.com/s2/favicons?domain=philips.com&sz=128' },
         // תקשורת ורשתות
-        { name: 'Panduit',            logo: 'https://www.google.com/s2/favicons?domain=panduit.com&sz=128' },
-        { name: 'CommScope',          logo: 'https://www.google.com/s2/favicons?domain=commscope.com&sz=128' },
         { name: 'Cisco',              logo: 'https://www.google.com/s2/favicons?domain=cisco.com&sz=128' },
+        { name: 'Aruba',              logo: 'https://www.google.com/s2/favicons?domain=arubanetworks.com&sz=128' },
         { name: 'Ruijie',             logo: 'https://www.google.com/s2/favicons?domain=ruijienetworks.com&sz=128' },
-        { name: 'MikroTik',           logo: 'https://www.google.com/s2/favicons?domain=mikrotik.com&sz=128' },
         { name: 'Ubiquiti',           logo: 'https://www.google.com/s2/favicons?domain=ui.com&sz=128' },
         { name: 'TP-Link',            logo: 'https://www.google.com/s2/favicons?domain=tp-link.com&sz=128' },
-        // אבטחה ומצלמות
+        { name: 'D-Link',             logo: 'https://www.google.com/s2/favicons?domain=dlink.com&sz=128' },
+        { name: 'Panduit',            logo: 'https://www.google.com/s2/favicons?domain=panduit.com&sz=128' },
+        // אבטחת רשת / Firewall
+        { name: 'Check Point',        logo: 'https://www.google.com/s2/favicons?domain=checkpoint.com&sz=128' },
+        { name: 'Fortinet',           logo: 'https://www.google.com/s2/favicons?domain=fortinet.com&sz=128' },
+        { name: 'Palo Alto',          logo: 'https://www.google.com/s2/favicons?domain=paloaltonetworks.com&sz=128' },
+        // מצלמות ואבטחה פיזית
         { name: 'Hikvision',          logo: 'https://www.google.com/s2/favicons?domain=hikvision.com&sz=128' },
         { name: 'Dahua',              logo: 'https://www.google.com/s2/favicons?domain=dahuasecurity.com&sz=128' },
         { name: 'Provision-ISR',      logo: 'https://www.google.com/s2/favicons?domain=provision-isr.com&sz=128' },
+        { name: 'Axis Communications',logo: 'https://www.google.com/s2/favicons?domain=axis.com&sz=128' },
+        { name: 'Bosch Security',     logo: 'https://www.google.com/s2/favicons?domain=boschsecurity.com&sz=128' },
+        { name: 'Uniview',            logo: 'https://www.google.com/s2/favicons?domain=uniview.com&sz=128' },
+        // אזעקות
+        { name: 'Risco',              logo: 'https://www.google.com/s2/favicons?domain=riscogroup.com&sz=128' },
+        { name: 'Visonic',            logo: 'https://www.google.com/s2/favicons?domain=visonic.com&sz=128' },
       ],
     },
   };

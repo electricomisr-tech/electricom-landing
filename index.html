@@ -123,123 +123,7 @@
             border: 0;
         }
 
-        /* ==================== ACCESSIBILITY WIDGET ==================== */
-        .a11y-toggle {
-            position: fixed;
-            bottom: 24px;
-            left: 24px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--color-blue);
-            color: var(--color-white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            transition: var(--transition);
-        }
-
-        .a11y-toggle:hover, .a11y-toggle:focus {
-            background: var(--color-blue-dark);
-            transform: scale(1.08);
-        }
-
-        .a11y-toggle svg {
-            width: 30px;
-            height: 30px;
-        }
-
-        .a11y-panel {
-            position: fixed;
-            bottom: 90px;
-            left: 24px;
-            width: 320px;
-            max-width: calc(100vw - 48px);
-            background: var(--color-white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
-            padding: 20px;
-            z-index: 1001;
-            transform: translateY(20px) scale(0.95);
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            border: 1px solid var(--color-gray-100);
-        }
-
-        .a11y-panel.open {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .a11y-panel h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--color-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .a11y-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .a11y-option {
-            padding: 10px 8px;
-            background: var(--color-gray-50);
-            border: 2px solid transparent;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--color-gray-700);
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .a11y-option:hover, .a11y-option:focus {
-            background: var(--gradient-brand-soft);
-            border-color: var(--color-blue);
-            color: var(--color-blue);
-        }
-
-        .a11y-option.active {
-            background: var(--color-blue);
-            color: var(--color-white);
-            border-color: var(--color-blue);
-        }
-
-        .a11y-reset {
-            grid-column: 1 / -1;
-            background: var(--color-red);
-            color: var(--color-white);
-            margin-top: 4px;
-        }
-
-        .a11y-reset:hover, .a11y-reset:focus {
-            background: var(--color-red-dark);
-            color: var(--color-white);
-        }
-
-        /* Accessibility modes */
-        body.a11y-large-text { font-size: 19px; }
-        body.a11y-xlarge-text { font-size: 22px; }
-        body.a11y-grayscale { filter: grayscale(100%); }
-        body.a11y-high-contrast { filter: contrast(150%); }
-        body.a11y-negative { filter: invert(100%) hue-rotate(180deg); }
-        body.a11y-light-bg { background: #ffffff !important; }
-        body.a11y-light-bg * { background-color: transparent !important; color: #000 !important; }
-        body.a11y-underline a { text-decoration: underline !important; }
-        body.a11y-readable-font, body.a11y-readable-font * {
-            font-family: 'Arial', sans-serif !important;
-            letter-spacing: 0.5px;
-        }
+        /* Accessibility widget styles are now in accessibility.js (injected at runtime) */
 
         /* ==================== HEADER ==================== */
         .header {
@@ -1659,18 +1543,6 @@
                 text-align: center;
             }
 
-            .a11y-toggle {
-                width: 50px;
-                height: 50px;
-                bottom: 16px;
-                left: 16px;
-            }
-
-            .a11y-panel {
-                bottom: 78px;
-                left: 16px;
-                width: calc(100vw - 32px);
-            }
         }
 
         @media (max-width: 480px) {
@@ -1698,7 +1570,7 @@
         }
 
         @media print {
-            .header, .footer, .a11y-toggle, .a11y-panel, .nav-cta, .hero-buttons, .contact-form-wrap {
+            .header, .footer, .nav-cta, .hero-buttons, .contact-form-wrap {
                 display: none !important;
             }
         }
@@ -2523,65 +2395,7 @@
         </div>
     </footer>
 
-    <!-- Accessibility Widget -->
-    <button class="a11y-toggle" id="a11yToggle" aria-label="פתח תפריט נגישות" aria-expanded="false" aria-controls="a11yPanel">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="7" r="1.5" fill="currentColor"/>
-            <path d="M9 11h6M12 11v6M9 17l3-3 3 3"/>
-        </svg>
-    </button>
-
-    <div class="a11y-panel" id="a11yPanel" role="dialog" aria-label="הגדרות נגישות" aria-hidden="true">
-        <h3>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/>
-                <circle cx="12" cy="7" r="1.5" fill="currentColor"/>
-                <path d="M9 11h6M12 11v6"/>
-            </svg>
-            הגדרות נגישות
-        </h3>
-        <div class="a11y-options">
-            <button class="a11y-option" data-mode="large-text" aria-pressed="false">טקסט גדול</button>
-            <button class="a11y-option" data-mode="xlarge-text" aria-pressed="false">טקסט ענק</button>
-            <button class="a11y-option" data-mode="grayscale" aria-pressed="false">גווני אפור</button>
-            <button class="a11y-option" data-mode="high-contrast" aria-pressed="false">ניגודיות גבוהה</button>
-            <button class="a11y-option" data-mode="negative" aria-pressed="false">ניגודיות הפוכה</button>
-            <button class="a11y-option" data-mode="underline" aria-pressed="false">הדגשת קישורים</button>
-            <button class="a11y-option" data-mode="readable-font" aria-pressed="false">גופן קריא</button>
-            <button class="a11y-option" data-mode="light-bg" aria-pressed="false">רקע בהיר</button>
-            <button class="a11y-option a11y-reset" id="a11yReset">איפוס הגדרות</button>
-        </div>
-    </div>
-
-    <!-- Accessibility Statement Modal -->
-    <div id="a11yStatementModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9998;align-items:center;justify-content:center;padding:20px;" role="dialog" aria-modal="true" aria-labelledby="a11yStatementTitle">
-        <div style="background:white;max-width:700px;max-height:85vh;overflow-y:auto;border-radius:20px;padding:40px;position:relative;">
-            <button id="closeA11yStatement" style="position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:50%;background:#f1f5f9;font-size:20px;font-weight:bold;" aria-label="סגור">×</button>
-            <h2 id="a11yStatementTitle" style="font-size:28px;margin-bottom:20px;color:#0f172a;">הצהרת נגישות</h2>
-            <p style="margin-bottom:16px;line-height:1.8;">חברת אלקטריקום מערכות רואה חשיבות עליונה בהנגשת השירותים שלה לכלל הציבור, לרבות אנשים עם מוגבלויות.</p>
-            <p style="margin-bottom:16px;line-height:1.8;">אתר זה נבנה בהתאם להוראות חוק שוויון זכויות לאנשים עם מוגבלות, התשנ"ח-1998, ולתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013.</p>
-            <h3 style="font-size:20px;margin:20px 0 12px;color:#0f172a;">רמת הנגישות באתר</h3>
-            <p style="margin-bottom:16px;line-height:1.8;">האתר עומד בדרישות תקן ישראלי 5568 ברמה AA, המתבסס על תקן WCAG 2.1 של ארגון W3C.</p>
-            <h3 style="font-size:20px;margin:20px 0 12px;color:#0f172a;">אמצעי נגישות באתר</h3>
-            <ul style="margin-bottom:16px;line-height:1.9;padding-right:20px;">
-                <li>תפריט נגישות עם אפשרויות התאמה אישית (הגדלת טקסט, ניגודיות, גוונים, גופן קריא)</li>
-                <li>ניווט מלא באמצעות מקלדת</li>
-                <li>תמיכה בקוראי מסך עם תיוג ARIA</li>
-                <li>תיאורי חלופה לתמונות וסמלים</li>
-                <li>מבנה כותרות סמנטי לניווט קל</li>
-                <li>ניגודיות צבעים העומדת בתקן</li>
-                <li>אפשרות לדילוג לתוכן הראשי</li>
-                <li>תמיכה בהפחתת תנועה (prefers-reduced-motion)</li>
-            </ul>
-            <h3 style="font-size:20px;margin:20px 0 12px;color:#0f172a;">פנייה לרכז הנגישות</h3>
-            <p style="margin-bottom:8px;line-height:1.8;">נתקלתם בקושי בשימוש באתר? נשמח לשמוע ולסייע.</p>
-            <p style="margin-bottom:8px;line-height:1.8;"><strong>שם:</strong> ליאור - רכז נגישות</p>
-            <p style="margin-bottom:8px;line-height:1.8;"><strong>טלפון:</strong> <a href="tel:0509481242" dir="ltr" style="color:#2563eb;">050-948-1242</a></p>
-            <p style="margin-bottom:16px;line-height:1.8;"><strong>דוא"ל:</strong> <a href="mailto:ElectriCom.isr@gmail.com" style="color:#2563eb;">ElectriCom.isr@gmail.com</a></p>
-            <p style="font-size:14px;color:#64748b;margin-top:24px;">תאריך עדכון אחרון: מאי 2026</p>
-        </div>
-    </div>
+    <!-- Accessibility widget + statement injected by accessibility.js -->
 
     <script>
         // ==================== Header Scroll Effect ====================
@@ -2664,126 +2478,11 @@
             });
         });
 
-        // ==================== Accessibility Widget ====================
-        const a11yToggle = document.getElementById('a11yToggle');
-        const a11yPanel = document.getElementById('a11yPanel');
-        const a11yOptions = document.querySelectorAll('.a11y-option:not(.a11y-reset)');
-        const a11yReset = document.getElementById('a11yReset');
-
-        a11yToggle.addEventListener('click', () => {
-            const isOpen = a11yPanel.classList.toggle('open');
-            a11yToggle.setAttribute('aria-expanded', isOpen);
-            a11yPanel.setAttribute('aria-hidden', !isOpen);
-        });
-
-        // Close on click outside
-        document.addEventListener('click', (e) => {
-            if (!a11yPanel.contains(e.target) && !a11yToggle.contains(e.target) && a11yPanel.classList.contains('open')) {
-                a11yPanel.classList.remove('open');
-                a11yToggle.setAttribute('aria-expanded', 'false');
-                a11yPanel.setAttribute('aria-hidden', 'true');
-            }
-        });
-
-        // Load saved preferences
-        const savedModes = JSON.parse(localStorage.getItem('a11yModes') || '[]');
-        savedModes.forEach(mode => {
-            document.body.classList.add(`a11y-${mode}`);
-            const btn = document.querySelector(`[data-mode="${mode}"]`);
-            if (btn) {
-                btn.classList.add('active');
-                btn.setAttribute('aria-pressed', 'true');
-            }
-        });
-
-        function saveModes() {
-            const active = Array.from(document.querySelectorAll('.a11y-option.active')).map(b => b.dataset.mode);
-            localStorage.setItem('a11yModes', JSON.stringify(active));
-        }
-
-        a11yOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                const mode = option.dataset.mode;
-
-                // Mutually exclusive groups
-                const textGroup = ['large-text', 'xlarge-text'];
-                const contrastGroup = ['grayscale', 'high-contrast', 'negative'];
-
-                if (textGroup.includes(mode)) {
-                    textGroup.forEach(m => {
-                        document.body.classList.remove(`a11y-${m}`);
-                        const b = document.querySelector(`[data-mode="${m}"]`);
-                        if (b !== option) {
-                            b.classList.remove('active');
-                            b.setAttribute('aria-pressed', 'false');
-                        }
-                    });
-                }
-                if (contrastGroup.includes(mode)) {
-                    contrastGroup.forEach(m => {
-                        document.body.classList.remove(`a11y-${m}`);
-                        const b = document.querySelector(`[data-mode="${m}"]`);
-                        if (b !== option) {
-                            b.classList.remove('active');
-                            b.setAttribute('aria-pressed', 'false');
-                        }
-                    });
-                }
-
-                const isActive = document.body.classList.toggle(`a11y-${mode}`);
-                option.classList.toggle('active', isActive);
-                option.setAttribute('aria-pressed', isActive);
-                saveModes();
-            });
-        });
-
-        a11yReset.addEventListener('click', () => {
-            a11yOptions.forEach(option => {
-                document.body.classList.remove(`a11y-${option.dataset.mode}`);
-                option.classList.remove('active');
-                option.setAttribute('aria-pressed', 'false');
-            });
-            localStorage.removeItem('a11yModes');
-        });
-
-        // Keyboard support for accessibility panel (ESC to close)
+        // ==================== Keyboard: close mobile menu on ESC ====================
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (a11yPanel.classList.contains('open')) {
-                    a11yPanel.classList.remove('open');
-                    a11yToggle.setAttribute('aria-expanded', 'false');
-                    a11yToggle.focus();
-                }
-                const modal = document.getElementById('a11yStatementModal');
-                if (modal.style.display === 'flex') {
-                    modal.style.display = 'none';
-                }
-                if (mainNav.classList.contains('open')) {
-                    mainNav.classList.remove('open');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                }
-            }
-        });
-
-        // ==================== Accessibility Statement Modal ====================
-        const a11yStatementLink = document.getElementById('a11yStatement');
-        const a11yStatementModal = document.getElementById('a11yStatementModal');
-        const closeA11yStatement = document.getElementById('closeA11yStatement');
-
-        a11yStatementLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            a11yStatementModal.style.display = 'flex';
-            closeA11yStatement.focus();
-        });
-
-        closeA11yStatement.addEventListener('click', () => {
-            a11yStatementModal.style.display = 'none';
-            a11yStatementLink.focus();
-        });
-
-        a11yStatementModal.addEventListener('click', (e) => {
-            if (e.target === a11yStatementModal) {
-                a11yStatementModal.style.display = 'none';
+            if (e.key === 'Escape' && mainNav.classList.contains('open')) {
+                mainNav.classList.remove('open');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
             }
         });
 
@@ -2805,5 +2504,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
     <script src="config.js"></script>
     <script src="cms.js"></script>
+
+    <!-- ============ Accessibility Module (Israeli Standard 5568 / WCAG 2.1 AA) ============ -->
+    <script src="accessibility.js"></script>
 </body>
 </html>

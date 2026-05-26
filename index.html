@@ -1663,16 +1663,16 @@
                     </div>
                     <div class="hero-stats" role="list">
                         <div class="stat-item" role="listitem">
-                            <div class="stat-number" data-cms="hero.stat1_number">+30</div>
-                            <div class="stat-label" data-cms="hero.stat1_label">שנות ניסיון</div>
+                            <div class="stat-number" data-cms="hero.stat1_number">חשמל</div>
+                            <div class="stat-label" data-cms="hero.stat1_label">תכנון והתקנה</div>
                         </div>
                         <div class="stat-item" role="listitem">
-                            <div class="stat-number" data-cms="hero.stat2_number">+500</div>
-                            <div class="stat-label" data-cms="hero.stat2_label">לקוחות מרוצים</div>
+                            <div class="stat-number" data-cms="hero.stat2_number">תקשורת</div>
+                            <div class="stat-label" data-cms="hero.stat2_label">רשתות מקצועיות</div>
                         </div>
                         <div class="stat-item" role="listitem">
-                            <div class="stat-number" data-cms="hero.stat3_number">24/7</div>
-                            <div class="stat-label" data-cms="hero.stat3_label">זמינות לתקלות</div>
+                            <div class="stat-number" data-cms="hero.stat3_number">אבטחה</div>
+                            <div class="stat-label" data-cms="hero.stat3_label">מצלמות ובקרה</div>
                         </div>
                     </div>
                 </div>
@@ -1729,8 +1729,12 @@
             <style>
                 .partners { background: var(--color-gray-50); padding: 36px 0; border-top: 1px solid var(--color-gray-100); border-bottom: 1px solid var(--color-gray-100); overflow: hidden; }
                 .partners-title { text-align: center; color: var(--color-gray-500); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
-                .marquee { position: relative; overflow: hidden; mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%); }
-                .marquee-track { display: flex; align-items: center; width: max-content; will-change: transform; direction: ltr; }
+                .marquee { position: relative; overflow: hidden; direction: ltr; contain: layout paint; }
+                .marquee::before, .marquee::after { content: ''; position: absolute; top: 0; bottom: 0; width: 70px; z-index: 1; pointer-events: none; }
+                .marquee::before { left: 0; background: linear-gradient(to right, var(--color-gray-50), rgba(0,0,0,0)); }
+                .marquee::after { right: 0; background: linear-gradient(to left, var(--color-gray-50), rgba(0,0,0,0)); }
+                .marquee-track { display: flex; align-items: center; width: max-content; will-change: transform; direction: ltr; animation: marquee-scroll 60s linear infinite; backface-visibility: hidden; pointer-events: none; }
+                .marquee:hover .marquee-track { animation-play-state: paused; }
                 .marquee-track > template { display: none !important; }
                 .partner-logo { flex: 0 0 220px; height: 80px; display: flex; align-items: center; justify-content: center; padding: 0 16px; opacity: .9; transition: opacity .25s, transform .25s; }
                 .partner-logo:hover { opacity: 1; transform: scale(1.05); }
@@ -1738,7 +1742,8 @@
                 .partner-logo .partner-text { font-weight: 700; color: var(--color-gray-700); font-size: 17px; white-space: nowrap; margin-right: 10px; }
                 /* Hide text when a proper logo image is present (only show text for favicons/small icons) */
                 .partner-logo:has(img[src^="logos/"]) .partner-text { display: none; }
-                @media (prefers-reduced-motion: reduce) { .marquee-track { transform: none !important; } }
+                @keyframes marquee-scroll { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+                @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none !important; } }
             </style>
             <h2 id="partners-title" class="partners-title" data-cms="partners.title">המותגים המובילים שאנחנו עובדים איתם</h2>
             <div class="marquee" id="partnersMarquee">
@@ -1751,42 +1756,6 @@
                     </template>
                 </div>
             </div>
-            <script>
-                // Smooth infinite marquee — JS-driven for truly seamless looping
-                (function () {
-                    const marquee = document.getElementById('partnersMarquee');
-                    if (!marquee) return;
-                    const track = marquee.querySelector('.marquee-track');
-                    let pos = 0;
-                    let halfWidth = 0;
-                    let lastT = performance.now();
-                    let paused = false;
-                    const speed = 55; // pixels per second
-                    function measure() {
-                        // Use offsetWidth of children to compute total content width reliably
-                        let total = 0;
-                        track.querySelectorAll('.partner-logo').forEach(el => { total += el.offsetWidth; });
-                        if (total > 0) halfWidth = total / 2;
-                    }
-                    function tick(now) {
-                        const dt = Math.min(50, now - lastT) / 1000;
-                        lastT = now;
-                        if (!paused && halfWidth > 0) {
-                            pos -= speed * dt;
-                            if (pos <= -halfWidth) pos += halfWidth;
-                            track.style.transform = 'translate3d(' + pos + 'px, 0, 0)';
-                        }
-                        requestAnimationFrame(tick);
-                    }
-                    marquee.addEventListener('mouseenter', () => { paused = true; });
-                    marquee.addEventListener('mouseleave', () => { paused = false; });
-                    // Re-measure after CMS injects items, after images load, after fonts load
-                    window.addEventListener('load', measure);
-                    new MutationObserver(measure).observe(track, { childList: true });
-                    [50, 200, 500, 1500, 3000].forEach(d => setTimeout(measure, d));
-                    requestAnimationFrame(tick);
-                })();
-            </script>
         </section>
 
         <!-- About Section -->
@@ -1800,7 +1769,7 @@
                                 <path d="M2 17l10 5 10-5"/>
                                 <path d="M2 12l10 5 10-5"/>
                             </svg>
-                            <h3 data-cms="about.badge_title">30 שנות מומחיות</h3>
+                            <h3 data-cms="about.badge_title">מומחיות הנדסית בכל פרויקט</h3>
                             <p data-cms="about.badge_desc">מובילים בתחום עם ניסיון בלתי מתפשר באלפי פרויקטים מוצלחים</p>
                         </div>
                     </div>
@@ -1810,7 +1779,7 @@
                         <h2 id="about-title" data-cms="about.title">מקצוענות ואמינות בכל פרויקט</h2>
                         <p data-cms="about.paragraph1">
                             אלקטריקום מערכות הוקמה מתוך אמונה שכל לקוח ראוי לפתרון איכותי, מקצועי ומותאם אישית.
-                            במשך למעלה משלושים שנה אנחנו מובילים בתחום תשתיות החשמל, התקשורת והאבטחה -
+                            אנחנו מתמחים בתכנון, הקמה ותחזוקה של תשתיות חשמל, תקשורת ואבטחה -
                             ומספקים שירות אישי וחם לצד מומחיות טכנית ברמה הגבוהה ביותר.
                         </p>
                         <p data-cms="about.paragraph2">
@@ -2334,7 +2303,7 @@
                             <span class="logo-text-en">ELECTRICOM SYSTEMS</span>
                         </div>
                     </div>
-                    <p data-cms="footer.description">מומחים בתשתיות חשמל, תקשורת ואבטחה. שלושים שנות ניסיון, מאות לקוחות מרוצים, שירות מקצועי בכל הארץ.</p>
+                    <p data-cms="footer.description">מומחים בתשתיות חשמל, תקשורת ואבטחה. שירות מקצועי, אחריות מלאה ופתרון מקצה לקצה - לתעשייה ולמוסדות.</p>
                     <div class="footer-social">
                         <a href="https://wa.me/972509481242" data-cms-href="contact.phone_intl" data-cms-href-prefix="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="וואטסאפ">
                             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

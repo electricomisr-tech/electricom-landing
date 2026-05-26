@@ -900,11 +900,85 @@
             background: var(--color-gray-50);
         }
 
+        /* Slider wrapper around the cards strip */
+        .testimonials-slider { position: relative; }
+
+        /* Horizontal scrolling strip with snap */
         .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            display: flex;
             gap: 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 4px 4px 16px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
+        .testimonials-grid::-webkit-scrollbar { display: none; }
+        .testimonials-grid > template { display: none !important; }
+
+        /* Card sizing: 3 per view on desktop, 2 on tablet, 1 on mobile */
+        .testimonial-card {
+            flex: 0 0 calc((100% - 48px) / 3);
+            scroll-snap-align: start;
+            min-width: 280px;
+        }
+        @media (max-width: 1000px) {
+            .testimonial-card { flex: 0 0 calc((100% - 24px) / 2); }
+        }
+        @media (max-width: 700px) {
+            .testimonial-card { flex: 0 0 calc(100% - 8px); }
+        }
+
+        /* Prev/Next arrows */
+        .slider-arrow {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-200);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            z-index: 3;
+            color: var(--color-gray-700);
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s, color .2s, transform .2s, opacity .2s;
+        }
+        .slider-arrow:hover { background: var(--color-blue); color: var(--color-white); transform: translateY(-50%) scale(1.08); }
+        .slider-arrow:disabled { opacity: .3; cursor: default; }
+        .slider-arrow svg { width: 22px; height: 22px; }
+        .slider-prev { right: -8px; }
+        .slider-next { left: -8px; }
+        @media (min-width: 1180px) {
+            .slider-prev { right: -28px; }
+            .slider-next { left: -28px; }
+        }
+        @media (max-width: 700px) {
+            .slider-arrow { display: none; }
+        }
+
+        /* Dots indicator */
+        .slider-dots {
+            display: flex; justify-content: center; gap: 10px;
+            margin-top: 28px;
+        }
+        .slider-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--color-gray-300);
+            border: none; cursor: pointer; padding: 0;
+            transition: all .25s;
+        }
+        .slider-dot.active {
+            background: var(--color-blue);
+            width: 28px;
+            border-radius: 5px;
+        }
+        /* When everything fits on screen, hide slider chrome — section looks like a clean grid */
+        .testimonials-slider.no-overflow .slider-arrow,
+        .testimonials-slider.no-overflow .slider-dots { display: none; }
+        .testimonials-slider.no-overflow .testimonials-grid { justify-content: center; }
 
         .testimonial-card {
             background: var(--color-white);
@@ -2100,6 +2174,10 @@
                     </p>
                 </div>
 
+                <div class="testimonials-slider" id="testimonialsSlider">
+                <button type="button" class="slider-arrow slider-prev" aria-label="המלצה קודמת">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+                </button>
                 <div class="testimonials-grid" data-cms-list="testimonials.items">
                     <template data-cms-tpl>
                         <article class="testimonial-card reveal">
@@ -2174,8 +2252,101 @@
                         </div>
                     </article>
                 </div>
-            </div>
-        </section>
+                <button type="button" class="slider-arrow slider-next" aria-label="המלצה הבאה">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 6 9 12 15 18"/></svg>
+                </button>
+                <div class="slider-dots" role="tablist" aria-label="מעבר בין המלצות"></div>
+                </div>
+
+                <script>
+                (function () {
+                    const slider = document.getElementById('testimonialsSlider');
+                    if (!slider) return;
+                    const grid = slider.querySelector('.testimonials-grid');
+                    const prevBtn = slider.querySelector('.slider-prev');
+                    const nextBtn = slider.querySelector('.slider-next');
+                    const dotsBox = slider.querySelector('.slider-dots');
+
+                    function cardStep() {
+                        const card = grid.querySelector('.testimonial-card');
+                        if (!card) return 0;
+                        const styles = getComputedStyle(grid);
+                        const gap = parseInt(styles.columnGap || styles.gap || '24', 10) || 24;
+                        return card.offsetWidth + gap;
+                    }
+
+                    function activeIndex() {
+                        const step = cardStep();
+                        if (!step) return 0;
+                        // RTL scroll-left is negative in modern browsers; take absolute value
+                        return Math.round(Math.abs(grid.scrollLeft) / step);
+                    }
+
+                    function maxIndex() {
+                        const cards = grid.querySelectorAll('.testimonial-card');
+                        return Math.max(0, cards.length - 1);
+                    }
+
+                    function refreshButtons() {
+                        const overflows = grid.scrollWidth > grid.clientWidth + 4;
+                        slider.classList.toggle('no-overflow', !overflows);
+                        if (!overflows) {
+                            prevBtn.disabled = true;
+                            nextBtn.disabled = true;
+                            return;
+                        }
+                        const idx = activeIndex();
+                        prevBtn.disabled = idx <= 0;
+                        nextBtn.disabled = idx >= maxIndex();
+                    }
+
+                    function buildDots() {
+                        const cards = grid.querySelectorAll('.testimonial-card');
+                        dotsBox.innerHTML = '';
+                        cards.forEach((_, i) => {
+                            const dot = document.createElement('button');
+                            dot.type = 'button';
+                            dot.className = 'slider-dot';
+                            dot.setAttribute('aria-label', 'המלצה ' + (i + 1));
+                            dot.addEventListener('click', () => goTo(i));
+                            dotsBox.appendChild(dot);
+                        });
+                        updateDots();
+                        refreshButtons();
+                    }
+
+                    function updateDots() {
+                        const idx = activeIndex();
+                        dotsBox.querySelectorAll('.slider-dot').forEach((d, i) => {
+                            d.classList.toggle('active', i === idx);
+                        });
+                    }
+
+                    function goTo(i) {
+                        const cards = grid.querySelectorAll('.testimonial-card');
+                        if (!cards[i]) return;
+                        const step = cardStep();
+                        // In RTL the target scroll-left is negative
+                        const isRTL = getComputedStyle(grid).direction === 'rtl';
+                        const target = (isRTL ? -1 : 1) * step * i;
+                        grid.scrollTo({ left: target, behavior: 'smooth' });
+                    }
+
+                    prevBtn.addEventListener('click', () => goTo(Math.max(0, activeIndex() - 1)));
+                    nextBtn.addEventListener('click', () => goTo(Math.min(maxIndex(), activeIndex() + 1)));
+
+                    let scrollT;
+                    grid.addEventListener('scroll', () => {
+                        clearTimeout(scrollT);
+                        scrollT = setTimeout(() => { updateDots(); refreshButtons(); }, 60);
+                    });
+
+                    // Re-render dots after CMS injects items
+                    new MutationObserver(buildDots).observe(grid, { childList: true });
+                    window.addEventListener('resize', () => { refreshButtons(); updateDots(); });
+                    buildDots();
+                })();
+                </script>
 
         <!-- Contact Section -->
         <section class="contact" id="contact" aria-labelledby="contact-title">
